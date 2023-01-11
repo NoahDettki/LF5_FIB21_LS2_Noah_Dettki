@@ -7,6 +7,36 @@ class Fahrkartenautomat {
 	 * da es beim Subtrahieren der double-Werte zu Rundungsfehlern kam.
 	 * (vgl. eine der ersten Zusatzaufgaben der Lern-Situation Fahrkartenautomat) 
 	 */
+	
+	static String[] fahrkartenBezeichnungen = {
+			"Einzelfahrschein AB",
+			"Einzelfahrschein BC",
+			"Einzelfahrschein ABC",
+			"Kurzstrecke AB",
+			"Tageskarte AB",
+			"Tageskarte BC",
+			"Tageskarte ABC",
+			"4-Fahrten-Karte AB",
+			"4-Fahrten-Karte BC",
+			"4-Fahrten-Karte ABC",
+			"Kleingruppen-Tageskarte AB",
+			"Kleingruppen-Tageskarte BC",
+			"Kleingruppen-Tageskarte ABC"};
+	static double[] fahrkartenPreise = {
+			3.00,
+			3.50,
+			3.80,
+			2.00,
+			8.60,
+			9.20,
+			10.00,
+			9.40,
+			12.60,
+			13.80,
+			25.50,
+			26.00,
+			26.50};
+	
 	public static void main(String[] args) {
 		int zuZahlenderBetragInCent;
 		int eingezahlterGesamtbetragInCent;
@@ -43,38 +73,26 @@ class Fahrkartenautomat {
 		
 		boolean auswahlBeendet = false;
 		while(!auswahlBeendet) {
-			System.out.println("Kurzstrecke AB [2,00 EUR] (1)");
-			System.out.println("Einzelfahrschein AB [3,00 EUR] (2)");
-			System.out.println("Tageskarte AB [8,80 EUR] (3)");
-			System.out.println("4-Fahrten-Karte AB [9,40 EUR] (4)");
-			System.out.println("Bezahlen (9)\n");
+			for(int i = 0; i < fahrkartenBezeichnungen.length; i++) {
+				System.out.printf(fahrkartenBezeichnungen[i] + " [%.2f EUR] (" + (i+1) +")\n", fahrkartenPreise[i]);
+			}
+			System.out.println("Bezahlen (0)\n");
 			
 			ticketPreis = 0;
 			byte wahl;
 			do {
 				System.out.print("Ihre Wahl: ");
 				wahl = tastatur.nextByte();
-				switch(wahl) {
-				case 1:
-					ticketPreis = 2.00;
-					break;
-				case 2:
-					ticketPreis = 3.00;
-					break;
-				case 3:
-					ticketPreis = 8.80;
-					break;
-				case 4:
-					ticketPreis = 9.40;
-					break;
-				case 9:
+				if(wahl > 0 && wahl <= fahrkartenBezeichnungen.length) {
+					// Der Kunde wählte ein Ticket aus der Liste:
+					ticketPreis = fahrkartenPreise[wahl - 1];
+				}else if(wahl == 0) {
 					// Der Kunde möchte keine weiteren Tickets:
 					auswahlBeendet = true;
-					break;
-				default:
+				}else {
+					// Der Kunde hat eine falsche Eingabe gemacht:
 					System.out.println(" >>falsche Eingabe<<");
 					wahl = -1;
-					break;
 				}
 			} while(wahl == -1);
 			
