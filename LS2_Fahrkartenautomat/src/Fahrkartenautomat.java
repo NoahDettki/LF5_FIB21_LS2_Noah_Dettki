@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 class Fahrkartenautomat {
@@ -8,36 +13,22 @@ class Fahrkartenautomat {
 	 * (vgl. eine der ersten Zusatzaufgaben der Lern-Situation Fahrkartenautomat) 
 	 */
 	
-	static String[] fahrkartenBezeichnungen = {
-			"Einzelfahrschein AB",
-			"Einzelfahrschein BC",
-			"Einzelfahrschein ABC",
-			"Kurzstrecke AB",
-			"Tageskarte AB",
-			"Tageskarte BC",
-			"Tageskarte ABC",
-			"4-Fahrten-Karte AB",
-			"4-Fahrten-Karte BC",
-			"4-Fahrten-Karte ABC",
-			"Kleingruppen-Tageskarte AB",
-			"Kleingruppen-Tageskarte BC",
-			"Kleingruppen-Tageskarte ABC"};
-	static double[] fahrkartenPreise = {
-			3.00,
-			3.50,
-			3.80,
-			2.00,
-			8.60,
-			9.20,
-			10.00,
-			9.40,
-			12.60,
-			13.80,
-			25.50,
-			26.00,
-			26.50};
-	
 	public static void main(String[] args) {
+		HashMap<String, Double> Fahrkarten = new LinkedHashMap<String, Double>();
+		Fahrkarten.put("Einzelfahrschein AB", 3.00);
+		Fahrkarten.put("Einzelfahrschein BC", 3.50);
+		Fahrkarten.put("Einzelfahrschein ABC", 3.80);
+		Fahrkarten.put("Kurzstrecke AB", 2.00);
+		Fahrkarten.put("Tageskarte AB", 8.60);
+		Fahrkarten.put("Tageskarte BC", 9.20);
+		Fahrkarten.put("Tageskarte ABC", 10.00);
+		Fahrkarten.put("4-Fahrten-Karte AB", 9.40);
+		Fahrkarten.put("4-Fahrten-Karte BC", 12.60);
+		Fahrkarten.put("4-Fahrten-Karte ABC", 13.80);
+		Fahrkarten.put("Kleingruppen-Tageskarte AB", 25.50);
+		Fahrkarten.put("Kleingruppen-Tageskarte AB", 26.00);
+		Fahrkarten.put("Kleingruppen-Tageskarte AB", 26.50);
+		
 		int zuZahlenderBetragInCent;
 		int eingezahlterGesamtbetragInCent;
 
@@ -45,7 +36,7 @@ class Fahrkartenautomat {
 		
 		begruessung();
 		// 1 Kartenauswahl und Ticketanzahl
-		zuZahlenderBetragInCent = fahrkartenbestellungErfassung(tastatur);
+		zuZahlenderBetragInCent = fahrkartenbestellungErfassung(tastatur, Fahrkarten);
 		// 2 Geldeinwurf
 		eingezahlterGesamtbetragInCent = fahrkartenBezahlen(tastatur, zuZahlenderBetragInCent);
 		// 3 Fahrscheinausgabe
@@ -60,7 +51,7 @@ class Fahrkartenautomat {
 		System.out.println("Herzlich Willkommen!\n");
 	}
 	
-	public static int fahrkartenbestellungErfassung(Scanner tastatur) {
+	public static int fahrkartenbestellungErfassung(Scanner tastatur, HashMap<String, Double> Fahrkarten) {
 		double ticketPreis = 0.0f;
 		int ticketAnzahl = 0;
 		int zuZahlenInCent = 0;
@@ -73,9 +64,13 @@ class Fahrkartenautomat {
 		
 		boolean auswahlBeendet = false;
 		while(!auswahlBeendet) {
-			for(int i = 0; i < fahrkartenBezeichnungen.length; i++) {
-				System.out.printf(fahrkartenBezeichnungen[i] + " [%.2f EUR] (" + (i+1) +")\n", fahrkartenPreise[i]);
+			int i = 1;
+			for(Map.Entry<String,Double> e :Fahrkarten.entrySet()){
+				System.out.printf(e.getKey() + " [%.2f EUR] (" + i++ +")\n", e.getValue());
 			}
+//			for(int i = 0; i < fahrkartenBezeichnungen.length; i++) {
+//				System.out.printf(fahrkartenBezeichnungen[i] + " [%.2f EUR] (" + (i+1) +")\n", fahrkartenPreise[i]);
+//			}
 			System.out.println("Bezahlen (0)\n");
 			
 			ticketPreis = 0;
@@ -83,9 +78,12 @@ class Fahrkartenautomat {
 			do {
 				System.out.print("Ihre Wahl: ");
 				wahl = tastatur.nextByte();
-				if(wahl > 0 && wahl <= fahrkartenBezeichnungen.length) {
-					// Der Kunde wählte ein Ticket aus der Liste:
-					ticketPreis = fahrkartenPreise[wahl - 1];
+				if(wahl > 0 && wahl <= Fahrkarten.size()) {
+					// Der Kunde wählte ein Ticket aus der Liste.
+					// Leider muss ich hier die Werte der HashMap in eine
+					// Liste umwandeln um mit einem Index arbeiten zu können:
+					List<Double> list = new ArrayList<Double>(Fahrkarten.values());
+					ticketPreis = list.get(wahl - 1);
 				}else if(wahl == 0) {
 					// Der Kunde möchte keine weiteren Tickets:
 					auswahlBeendet = true;
